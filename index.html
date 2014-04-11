@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Test</title>
+		
+		<link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
+		<link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap-responsive.min.css" rel="stylesheet">
+		<link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet">
+		<link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="styles/main.css">
+		
+	</head>
+	<body>
+		<div id="left"></div>
+		<div id="right"></div>
+		
+		
+		
+		<div class="navbar navbar-inverse">
+			<div class="navbar-inner">
+				<div class="container-fluid">
+											
+						<button class="btn btn-inverse btn-large btn-top pull-left" ><i class="icon-align-justify icon-white icon-large"></i></button>
+						<input id="query" /> 
+						<button id="search" class="btn btn-info">Go!</button>					
+						<button onclick="window.location='index.html';" class="btn btn-inverse btn-large pull-right"><i class="icon-home icon-white icon-large"></i></button>	
+					
+				</div>
+			</div>			
+		</div>				
+		
+    	
+		<div id="results" class="text-center sites">
+		</div>
+	</body>
+    
+
+    
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script>
+   
+	
+	
+	 function on_loading(){
+		var url='http://uptsearch.cloudapp.net/solr/rss/select?q=*%3A*&indent=true&wt=json&callback=?&json.wrf=on_data&group=true&group.field=source&group.limit=3&fl=title,link&sort=date%20asc&group.sort=date%20desc';
+        $.getJSON(url);
+		
+	}
+	
+	function on_data(data) {
+		$('#results').empty();
+		var docs = data.grouped.source.groups;		
+		$.each(docs, function(i, item) {
+		$.each(item, function(i2, item2) {
+		$.each(item2, function(i3, item3) {
+		$.each(item3, function(i4, item4) {
+		console.log(i4, item4)
+		if (item4.title != undefined){
+		$('#results').prepend($('<div><ul class="titles thumbnails span4"><li><a href="' + item4.link + '"class="thumbnail"><p>' + item4.title + '</p></a></li></ul></div>'));
+		}
+		})})})
+		$('#results').prepend('<div class=" sites taust span13"><center><li><a onclick=on_linkcl("'+item.groupValue+'")><h4>' + item.groupValue + '</h4></a></li></center>');
+		});
+	}
+	
+	function search_data(data) {
+        $('#results').empty();
+        var docs = data.response.docs;
+        $.each(docs, function(i, item) {
+	    $('#results').prepend($('<div><ul class="thumbnails"><li><a href="' + item.link + '" class="thumbnail"><p>' + item.title + '</p></a></li></ul></div>'));
+		$('#results').prepend('<div class="sites taust span13"><center><li><a onclick=on_linkcl("'+item.source+'")><h4>' + item.source + '</h4></a></li></center>');
+		});
+
+        var total = 'Found ' + docs.length + ' results';
+        $('#results').prepend('<div>' + total + '</div>');
+	}
+	
+	function on_linkcl(a){
+		var url='http://uptsearch.cloudapp.net/solr/rss/select?q='+a+'&indent=true&wt=json&callback=?&json.wrf=site_data&sort=date%20asc&start=0&rows=50';
+        $.getJSON(url);
+		
+	}
+	function site_data(data) {
+        $('#results').empty();
+        var docs = data.response.docs;
+        var counter = 0;
+		$.each(docs, function(i, item) {
+	    $('#results').prepend($('<div><ul class="titles thumbnails span4"><li><a href="' + item.link + '" class="thumbnail"><p>' + item.title + '</p></a></li></ul></div>'));
+		});
+		$.each(docs, function(i, item) {
+		if (counter < 1){
+		$('#results').prepend('<div class="sites taust span13"><center><li><a href="#"><h4>' + item.source + '</h4></a></li></center>');
+		}
+		counter += 1
+		});
+        
+	}
+
+	
+    function on_search() {
+        var query = $('#query').val();
+        if (query.length == 0) {
+            return;
+        }
+			
+        var url='http://uptsearch.cloudapp.net/solr/rss/select?q='+query+'&indent=true&wt=json&callback=?&json.wrf=search_data&sort=date%20asc&start=0&rows=50';
+        $.getJSON(url);
+    }
+	
+    function on_ready() {
+        $('#search').click(on_search);
+        $('body').keypress(function(e) {
+            if (e.keyCode == '13') {
+                on_search();
+            }
+        });
+		on_loading();
+		
+		
+	
+    }
+	
+    $(document).ready(on_ready);
+</script>
+	
+	
+	

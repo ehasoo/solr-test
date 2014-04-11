@@ -1,0 +1,77 @@
+.sites {
+    width: 92%;
+    margin-right: 4%;
+    margin-left:  4%;
+	margin-bottom: 10px;
+    padding: 0;
+    position: center;
+
+	}
+
+.titles {
+    margin-right: 1px;
+    margin-left:  1px;
+	margin-bottom: 10px;
+    padding: 0;
+
+	}
+	
+	
+	
+.taust {
+		background: #1D1D1D
+		}
+
+
+html, body {
+    margin: 0; padding: 0; border: 0; 
+}
+
+.container {
+    width: 92%;
+    height: 100%;
+    margin: 0 auto;
+    padding: 10px;
+    position: center;
+	background: #fff;
+}
+
+#left, #right {
+    position: fixed;
+    width: 2%;
+    height: 100%;
+    top: 0
+}
+
+#left {
+    background: #1D1D1D;
+    left: 0
+}
+
+#right {
+    background: #1D1D1D;
+    right: 0
+}
+
+
+.thumbnail{
+	text-aling: center;
+	color: grey;
+	display:table-cell !important;
+	vertical-align: middle !important;	
+	height: 50px;
+	}
+
+.thumbnails {
+    text-align: center;
+	color: grey;
+	
+}
+
+.thumbnails li {
+	float: none !important; /* to overwrite the default property on the bootstrap stylesheet */
+    display: inline-block;
+    *display: inline; /* ie7 support */
+    zoom: 1;
+	}
+
